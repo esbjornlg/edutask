@@ -3,7 +3,7 @@ import pytest_cov
 from unittest.mock import patch
 from src.util.dao import DAO
 import unittest.mock as mock
-
+import pymongo
 collection_name = "mockedcollection"
 validator = {
     "$jsonSchema": {
@@ -35,9 +35,35 @@ def test_create_valid(dao, data):
     assert validation_result is not None
     dao.drop()
 
-# @pytest.mark.unit
-# @pytest.mark.parametrize("email, expected_exception", [("invalid_email", ValueError)])
-# def test_get_user_by_email_ValueError_invalid_email(sut, email, expected_exception):
-#     with pytest.raises(expected_exception):
-#         sut.get_user_by_email(email)
+@pytest.mark.integration
+@pytest.mark.parametrize("data", [{"name": "Bullen", "age": 30}, {"name": "Bullen", "age": 30}])
+def test_create_not_unique_WriteError(dao, data):
+    validation_result = False
+    try:
+        dao.create(data)
+    except pymongo.errors.WriteError:
+        validation_result = True
+    assert validation_result == True
+    dao.drop()
 
+@pytest.mark.integration
+@pytest.mark.parametrize("data", [{"name": "Bullen", "age": "Age"}])
+def test_create_wrong_Bson_WriteError(dao, data):
+    validation_result = False
+    try:
+        dao.create(data)
+    except pymongo.errors.WriteError:
+        validation_result = True
+    assert validation_result == True
+    dao.drop()
+
+@pytest.mark.integration
+@pytest.mark.parametrize("data", [{"name": "Bullen", "perc": 30}])
+def test_create_wrong_properties_WriteError(dao, data):
+    validation_result = False
+    try:
+        dao.create(data)
+    except pymongo.errors.WriteError:
+        validation_result = True
+    assert validation_result == True
+    dao.drop()
