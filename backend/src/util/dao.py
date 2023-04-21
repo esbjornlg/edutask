@@ -35,6 +35,7 @@ class DAO:
         # create the collection if it does not yet exist
         if collection_name not in database.list_collection_names():
             validator = getValidator(collection_name)
+            print(getValidator(collection_name))
             database.create_collection(collection_name, validator=validator)
 
         self.collection = database[collection_name]
@@ -51,8 +52,8 @@ class DAO:
         raises:
             WriteError - in case at least one of the validator criteria is violated
         """
+        print(self.collection)
         localdata = dict(data)
-
         try:
             # insert the object into the database
             inserted_id = self.collection.insert_one(localdata).inserted_id
@@ -80,7 +81,7 @@ class DAO:
             return self.to_json(obj)
         except Exception as e:
             raise
-
+            
     # find all objects that comply to the optional filter
     def find(self, filter=None, toid: list = None):
         """Find all objects contained in the collection which comply to the given filter. 
