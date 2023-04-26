@@ -58,7 +58,7 @@ def test_create_wrong_Bson_WriteError(dao, data):
     dao.drop()
 
 @pytest.mark.integration
-@pytest.mark.parametrize("data", [{"name": "Bullen", "perc": 30}])
+@pytest.mark.parametrize("data", [{"name": "Bullen", "city": 30}])
 def test_create_wrong_properties_WriteError(dao, data):
     validation_result = False
     try:
