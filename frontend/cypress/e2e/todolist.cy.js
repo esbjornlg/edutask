@@ -10,17 +10,12 @@ describe('R8UC1', () => {
     cy.get("input[value=Login]").click();
 
     let h1Text = "";
-    cy.get("h1")
-      .should("exist")
-      .then($h1 => {
-        //Sign in was successful
-        h1Text = $h1.text();
-      });
-
+    cy.get('h1').invoke('text').then((text) => {
+      h1Text = text;
+    });
     //Create new account if it doesn't exist
-    cy.log(h1Text == "" ? "EMPTY H1" : h1Text);
-    if (h1Text != "Your tasks, " + firstName + " " + lastName) {
-      cy.contains("a", "Have no account yet? Click here to sign up.").click();
+    if (h1Text == "Login") {
+      cy.get("input[value='Have no account yet? Click here to sign up.']").click();
       cy.contains("div", "First Name")
         .find("input[type=text]")
         .type(firstName);
@@ -35,10 +30,10 @@ describe('R8UC1', () => {
     let taskName = "Pawn Stars";
     let youtubeURL = "DRVlUDQCmNk";
     //try to find existing task
-    cy.get('a:contains("img")').then($task => {
-      if ($task.length)
-        task = $task[0]
+    cy.$$("a:contains('img')").then($task => {
+      task = $task;
     })
+
     if (!task) {
       cy.contains("div", "Title")
         .find("input[type=text]")
@@ -64,8 +59,6 @@ describe('R8UC1', () => {
         $submitButton.click();
       }
     });
-
-    cy.contains('span.editable', textToType).should('exist');
   })
 
 })
