@@ -62,11 +62,10 @@ describe("R8UC1", () => {
     let textToType = "RemoveThisItem" + number;
     addTodoItem(textToType);
     cy.contains('li', textToType)
-      .find('span.remover')
-      .click()
-      .then(() => {
-        cy.contains("span.editable", textToType).should("not.exist");
-      });
+      .find('span').
+      contains('✖')
+      .click();
+    cy.contains("span.editable", textToType).should("not.exist");
   });
 
 });
