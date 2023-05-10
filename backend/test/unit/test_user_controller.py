@@ -13,8 +13,8 @@ def sut():
                     ]:
             if user['email'] == object['email']:
                 users.append(user)
-        if (len(users) == 0):
-            return [None]
+        if (users is None or len(users) == 0):
+            return None
         return users
     mocked_dao.find.side_effect = find_side_effect
     sut = UserController(mocked_dao)
@@ -33,7 +33,7 @@ def test_get_user_by_email_Valid_User(sut, email):
     assert validation_result is not None
 
 @pytest.mark.unit
-@pytest.mark.parametrize("email, expected_exception", [("invalid_email", ValueError)])
+@pytest.mark.parametrize("email, expected_exception", [("invalid_email@invalid", ValueError)])
 def test_get_user_by_email_ValueError_invalid_email(sut, email, expected_exception):
     with pytest.raises(expected_exception):
         sut.get_user_by_email(email)
