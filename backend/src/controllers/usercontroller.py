@@ -2,7 +2,7 @@ from src.controllers.controller import Controller
 from src.util.dao import DAO
 
 import re
-emailValidator = re.compile(r'.*@.*')
+emailValidator = re.compile(r'([A-Za-z0-9]+[.-_])*[A-Za-z0-9]+@[A-Za-z0-9-]+(\.[A-Z|a-z]{2,})+')
 
 class UserController(Controller):
     def __init__(self, dao: DAO):
@@ -24,7 +24,6 @@ class UserController(Controller):
             ValueError -- in case the email parameter is not valid (i.e., conforming <local-part>@<domain>.<host>)
             Exception -- in case any database operation fails
         """
-
         if not re.fullmatch(emailValidator, email):
             raise ValueError('Error: invalid email address')
 
@@ -32,9 +31,11 @@ class UserController(Controller):
             users = self.dao.find({'email': email})
             if len(users) == 1:
                 return users[0]
-            else:
+            elif len(users) > 1:
                 print(f'Error: more than one user found with mail {email}')
                 return users[0]
+            else:
+                return None
         except Exception as e:
             raise
 
